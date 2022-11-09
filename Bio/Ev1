@@ -1,0 +1,108 @@
+---
+title: "entrega1"
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r}
+#Llamar librerías (previamente instaladas)
+library(arsenal)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+require(maps)
+require(viridis)
+theme_set(theme_void())
+#También se descargó la librería de BiocManager
+library(seqinr)
+library(ape)
+library(ggtree)
+library(ggmsa)
+library(ggplot2)
+library(stringr)
+library(Biostrings)
+```
+
+Parte 1: Secuencias de virus
+
+Leer secuencias de los 5 virus y graficarlas con ggmsa
+```{r}
+#Virus FASTA
+virus1 <- readDNAStringSet("virus.fasta", format = "fasta")
+ggmsa(virus1, 0, 100, color="Chemistry_AA")
+
+#Sars-Covid
+sarscovid1 <- readDNAStringSet("SarsCovid.fasta", format = "fasta")
+ggmsa(sarscovid1, 0, 100, color="Chemistry_AA")
+
+#Zika
+zika1 <- readDNAStringSet("ZIKA.fasta", format = "fasta")
+ggmsa(zika1, 0, 100, color="Chemistry_AA")
+
+#Wuhan
+wuhan1 <- readDNAStringSet("Wu-Han-1.fasta", format = "fasta")
+ggmsa(wuhan1, 0, 100, color="Chemistry_AA")
+
+#Mers-Covid
+merscovid1 <- readDNAStringSet("Mers-Cov.fasta", format = "fasta")
+ggmsa(merscovid1, 0, 100, color="Chemistry_AA")
+
+#Dengue
+dengue1 <- readDNAStringSet("Dengue.fasta", format = "fasta")
+ggmsa(dengue1, 0, 100, color="Chemistry_AA")
+```
+
+```{r}
+
+#Convertir las secuencias a chars usando la librería stringr para trabajar con mayor facilidad 
+#Se van a separar las letras correspondientes a los nucleótidos
+
+#Zika
+zika_chars <-str_split(zika1, "")
+#Sars-Covid
+sarscovid_chars <-str_split(sarscovid1, "")
+#Wuhan
+wuhan_chars <-str_split(wuhan1, "")
+#Mers-Covid
+merscovid_chars <-str_split(merscovid1, "")
+#Dengue
+dengue_chars <-str_split(dengue1, "")
+
+#Leer los elementos de cada secuencia
+#Zika
+zika_elem <- zika_chars[[1]]
+#Sars-Covid
+sarscovid_elem <- sarscovid_chars[[1]]
+#Wuhan 
+wuhan_elem <- wuhan_chars[[1]]
+#Mers-Covid
+merscovid_elem <- merscovid_chars[[1]]
+#Dengue
+dengue_elem <- dengue_chars[[1]]
+
+#Leer primeros 100 elementos de cada virus
+zika <- zika_elem[1:100]
+sarscovid <- sarscovid_elem[1:100]
+wuhan <- wuhan_elem[1:100]
+merscovid <- merscovid_elem[1:100]
+dengue <- dengue_elem[1:100]
+
+#Vector con posiciones 
+posicion = c(1:100)
+#Vector con nombres de nucleótidos
+nucleotidos= c("a", "g", "c","t")
+
+#Crear Data Frame
+datos_virus <- data.frame(posicion, nucleotidos, zika, sarscovid, wuhan, merscovid, dengue)
+
+#Imprimir data frame
+datos_virus
+
+#Graficar datos
+plot <- ggplot(data = datos_virus) +
+  geom_point(mapping = aes(x = posicion, y = zika, color = "Zika")) +geom_point(mapping = aes(x = posicion, y = sarscovid, color = "Sars"))+geom_point(mapping = aes(x = posicion, y = wuhan, color = "Wuhan"))+geom_point(mapping = aes(x = posicion, y = merscovid, color = "Mers"))+geom_point(mapping = aes(x = posicion, y = dengue, color = "Dengue"))
+
+plot + labs(title="Comparación de las Secuencias de Virus", x="Posición", y="Nucleótido", color="Tipos de Virus")
+```
+
+

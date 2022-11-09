@@ -1,0 +1,75 @@
+---
+title: "S6"
+output: html_document
+---
+
+``` {r}
+install.packages("seqinr")
+library("seqinr")
+```
+```{r}
+zika <- read.fasta("ZIKA.fasta")
+```
+ZIKA
+1. tamaño
+```{r}
+length(zika[[1]])
+```
+2. nucleotidos
+```{r}
+count(zika[[1]],1)
+```
+3. secuencia complementaria de DNA
+```{r}
+zika
+comp(zika[[1]])
+```
+4. pares de bases
+```{r}
+count(zika[[1]],2)
+```
+
+Wu-Han 1
+```{r}
+wuhan <- read.fasta("Wu-Han-1.fasta")
+```
+tamaño
+```{r}
+length(wuhan[[1]])
+```
+nucleótidos
+```{r}
+count(wuhan[[1]], 1)
+```
+pares de bases
+```{r}
+count(wuhan[[1]], 2)
+```
+secuencia complementaria
+```{r}
+wuhan
+comp(wuhan[[1]])
+```
+
+SarsCovid
+```{r}
+sarscovid <- read.fasta("SarsCovid.fasta")
+```
+tamaño
+```{r}
+length(sarscovid[[1]])
+```
+nucleótidos
+```{r}
+count(sarscovid[[1]], 1)
+```
+pares de bases
+```{r}
+count(sarscovid[[1]], 2)
+```
+secuencia complementaria
+```{r}
+wuhan
+comp(sarscovid[[1]])
+```
+

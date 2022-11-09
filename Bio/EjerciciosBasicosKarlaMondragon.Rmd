@@ -1,0 +1,90 @@
+---
+title: "Ejercicios1"
+output: html_document
+---
+```{r}
+install.packages("tidyverse")
+library(tidyr)
+```
+
+1. Vector x con datos 10,11,13,-1,6,3
+```{r}
+x <- c(10, 11, 13, -1, 6, 3)
+x
+```
+2. estadística simple de x
+```{r}
+summary(x) #resumen
+prom <- mean(x) #media
+median <-median(x) #mediana
+ds <- sd(x, na.rm=TRUE) #desviación estandar
+est.x <- c(prom, median, ds)
+est.x
+```
+3. secuencia de números 20-50, promedio 20:60, suma 51:90
+```{r}
+y <-(20:50)
+y
+z.prom <- mean(20:60)
+z.prom
+w.suma <- sum(51:91, na.rm=FALSE)
+w.suma
+```
+4. vector 10 valores random
+```{r}
+z <- c(-100:50)
+zrandom <- sample(-100:50, 10)
+zrandom
+```
+5. fibonacci primeros 10 
+fufb <- numeric(10)
+fb1 <- fb[2] <- 1
+```{r}
+x <- c(0,1)
+for (i in length(x):9){
+  n <- length(x)
+  nuevo <- x[n] + x[n-1]
+  x <- c(x, nuevo)
+} 
+x
+```
+6. máx y min de un vector
+```{r}
+w <- c(10, 20, 30, 4, 50, -60)
+w.max <- max(w)
+w.max
+w.min <- min(w)
+w.min
+a <- sample(-5000:152, 100)
+a.max <- max(a)
+a.max
+a.min <- min(a)
+a.min
+```
+7. multiplicar dos vectores 
+```{r}
+b <- c(10,20)
+c <- c(3,4)
+d <- b*c
+d
+```
+8. contar en vector
+```{r}
+cuenta <- c(10, 20, 10, 7, 24, 7, 5)
+cuenta[4]
+```
+9. enésimo valor de un vector
+```{r}
+enesimo <- function(v, numero) {
+  v2 <- c()
+  for (i in 0:length(v)) {
+    if(is.na(v[numero*i+1])) {
+      break
+    }
+    v2 <- c(v2, v[numero*i+1])
+  }
+  return(v2)
+} 
+vector <- 1:100
+enesimo(vector, 5)
+```

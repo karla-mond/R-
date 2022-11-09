@@ -1,0 +1,156 @@
+---
+title: "Ejercicios_transcipcion_traduccion"
+output: html_document
+---
+
+# 1 Escribe una función que genere una secuencia aleatoria de DNA de tamaño “n”.
+```{r}
+
+#Pedir al usuario que proporcione la cantidad de elementos de la secuencia
+n <- readline(prompt = "¿De qué tamaño quieres la secuencia DNA?: ")
+#Definir vector de elementos a considerar en la secuencia (posibles combinaciones de elementos)
+bases <- c("A", "T", "C", "G")
+
+#Función que genera una secuencia de ADN de largo n
+genera <- function(bases, n) {
+  #Usar función sample para crear secuencia
+  return(sample(bases, n, replace = TRUE))
+}
+
+#Prueba 
+genera(bases, n)
+```
+
+# 2 Codifica una función que calcula el tamaño de una secuencia de DNA.
+```{r}
+#Crear función que encuentre el largo de una secuencia de ADN
+lenADN <- function(secuencia_adn){
+  #Usar función length para encontrar número de elemenos de la secuencia
+  return(length(secuencia_adn))
+}
+
+#Prueba
+adn <- c("A", "T", "C", "G", "C", "C", "C", "T", "T", "G")
+lenADN(adn)
+```
+
+# 3 Crea una función que recibe una secuencia de DNA e imprime el porcentaje de cada base en la secuencia.
+```{r}
+#Crear función para encontrar porcentajes de cada base
+porcentaje <- function(secuencia) 
+{
+  #Inicializar variables (cuentan la cantidad de bases)
+  num_a <- 0
+  num_t <- 0
+  num_c <- 0
+  num_g <- 0
+  #Ciclo para iterar dentro de toda la secuencia
+  for (i in 1:length(secuencia))
+  {
+    #Condiciones
+    #Si el elemento es "A"
+    if (secuencia[i] == "A")
+    {
+      #añadir 1 a la cuenta de a
+      num_a <- num_a + 1
+    }
+    #Si el elemento es "T"
+    else if (secuencia[i] == "T")
+    {
+      #añadir 1 a la cuenta de t
+      num_t <- num_t + 1
+    }
+    #Si el elemento es "G"
+    else if (secuencia[i] == "G")
+    {
+      #añadir 1 a la cuenta de g
+      num_g <- num_g + 1
+    }
+    #Si el elemento es "C"
+    else if (secuencia[i] == "C")
+    {
+      #añadir 1 a la cuenta de c
+      num_c <- num_c + 1
+    }
+    #Si un elemento no es una de las bases
+    else
+    {
+      #FALTA
+    }
+  }
+  #Calcular porcentajes 
+  porcentaje_a <- (num_a/length(secuencia))*100
+  porcentaje_t <- (num_t/length(secuencia))*100
+  porcentaje_g <- (num_g/length(secuencia))*100
+  porcentaje_c <- (num_c/length(secuencia))*100
+  #Imprimir porcentajes de cada base
+  print(paste("%A:" ,porcentaje_a))
+  print(paste("%T: " ,porcentaje_t))
+  print(paste("%C: " ,porcentaje_c))
+  print(paste("%T: " ,porcentaje_g ))
+}
+
+#Prueba
+porcentaje(adn)
+```
+
+
+# 4 Programa una función que transcribe DNA a RNA, usa la siguiente tabla:
+```{r}
+#Función que transcribe ADN A ARN
+transcrip <- function(secuencia_adn)
+{
+  #Inicializar el vector de ARN
+  vector_arn <- c()
+  #Ciclo para iterar en todos los elementos de la secuencia ADN
+  for (i in 1:length(secuencia_adn)) {
+    #Condiciones
+    #Si el elemento de ADN es "A"
+    if (secuencia_adn[i] == "A")
+    {
+      #Agregar "U" a la cadena ARN (no existe "T")
+      vector_arn <- append(vector_arn, "U")
+    }
+    #Si el elemento de ADN es "T"
+    else if (secuencia_adn[i] == "T")
+    {
+      #Agregar "A" a la cadena ARN 
+      vector_arn <- append(vector_arn, "A")
+    }
+    #Si el elemento de ADN es "C"
+    else if (secuencia_adn[i] == "C")
+    {
+      #Agregar "G" a la cadena ARN 
+      vector_arn <- append(vector_arn, "G")
+    }
+    #Si el elemento de ADN es "G"
+    else if (secuencia_adn[i] == "G")
+    {
+      #Agregar "C" a la cadena ARN 
+      vector_arn <- append(vector_arn, "C")
+    }
+    #Si el elemento no pertenece a una cadena ADN
+    else 
+    {
+      #FALTA
+    }
+  }
+  return(vector_arn)
+}
+
+transcrip(adn)
+```
+
+# 5 Crea una función que traduce una secuencia de RNA a una secuencia de proteínas.
+```{r}
+#Crear función para traducir secuencias de ARN
+traduc <- function(secuencia_arn){
+  
+}
+```
+
+# 6 Escribe una función que recibe una hebra directa y regresa la hebra inversa
+
+# 7 
+# 8 
+# 9 

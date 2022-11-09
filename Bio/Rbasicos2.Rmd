@@ -1,0 +1,258 @@
+---
+title: "TranscripcionTraduccion"
+output: html_document
+---
+1. función que genere secuencia aleatoria de DNA
+```{r}
+n <- readline(prompt="Tamaño de la secuencia:")
+bases = c("A", "T", "C", "G")
+genera <- function(bases, n) {
+  secuencia <- (sample(bases, n, replace=TRUE))
+  return(secuencia)
+}
+secuencia <- genera(bases, n)
+secuencia
+```
+2. función tamaño de secuencia 
+```{r}
+tamanio <- function(secuencia)
+  return(length(secuencia))
+tamanio(secuencia)
+```
+3. porcentaje DNA
+```{r}
+porcentaje <- function(secuencia) 
+{
+  num_a <- 0
+  num_t <- 0
+  num_c <- 0
+  num_g <- 0
+  for (i in 1:length(secuencia))
+  {
+    if (secuencia[i] == "A")
+    {
+      num_a <- num_a + 1
+    }
+    else if (secuencia[i] == "T")
+    {
+      num_t <- num_t + 1
+    }
+    else if (secuencia[i] == "G")
+    {
+      #añadir 1 a la cuenta de g
+      num_g <- num_g + 1
+    }
+    else if (secuencia[i] == "C")
+    {
+      num_c <- num_c + 1
+    }
+    else
+  }
+  porcentaje_a <- (num_a/length(secuencia))*100
+  porcentaje_t <- (num_t/length(secuencia))*100
+  porcentaje_g <- (num_g/length(secuencia))*100
+  porcentaje_c <- (num_c/length(secuencia))*100
+  #Imprimir porcentajes de cada base
+  print(paste("%A:" ,porcentaje_a))
+  print(paste("%T: " ,porcentaje_t))
+  print(paste("%C: " ,porcentaje_c))
+  print(paste("%T: " ,porcentaje_g ))
+}
+```
+4. transcribe función DNA -> RNA
+```{r}
+transcrip <- function(secuencia_adn)
+{
+  vector_arn <- c()
+  for (i in 1:length(secuencia_adn)) {
+    if (secuencia_adn[i] == "A")
+    {
+      vector_arn <- append(vector_arn, "U")
+    }
+    else if (secuencia_adn[i] == "T")
+    {
+      vector_arn <- append(vector_arn, "A")
+    }
+    else if (secuencia_adn[i] == "C")
+    {
+      vector_arn <- append(vector_arn, "G")
+    }
+    else if (secuencia_adn[i] == "G")
+    {
+      vector_arn <- append(vector_arn, "C")
+    }
+  }
+  return(vector_arn)
+}
+```
+5. secuencia RNA a proteínas
+```{r}
+vector_trad <- c()
+vector_x <- c()
+stri <- ""
+posicion <- c()
+inicio <- function(secuencia){
+  for (j in 1:length(secuencia)) {
+    if (secuencia[j] == "A"){
+      if (secuencia[j+1] == "U"){
+        if (secuencia[j+2] == "G"){
+          posicion <- append(posicion, j)
+        }
+      }
+    }
+  }
+  return(posicion)
+}
+
+traduc -> function(secuencia) {
+  for(j in 1:length(posicion)) {
+    for(i in posicion[j]:length(secuencia)) {
+    vector_x <- append(vector_x, secuencia[i])
+    if(length(vector_x)==3) {
+      stri <- toString(vector_x)
+      stri <- str_replace_all(stri, ", ", "")
+      vector_x <- c()
+      if((stri=="UAU") | stri=="UAC") {
+        vector_trad <- append(vector_trad, "Tyr")
+      }
+      else if((stri=="UGU") | (stri=="UGC")) {
+        vector_trad <- append(vector_trad, "Cys")
+      }
+      else if(stri=="UGG") {
+        vector_trad <- append(vector_trad, "Trp")
+      }
+      else if((stri=="CAU") | (stri=="CAC")) {
+        vector_trad <- append(vector_trad, "His")
+      }
+      else if((stri=="CAA") | (stri=="CAG")) {
+        vector_trad <- append(vector_trad, "Gin")
+      }
+      else if((stri=="CGU") | (stri=="CGC") | (stri=="CGA") | (stri=="CGG") | (stri=="AGA") | (stri=="AGG")) {
+        vector_trad <- append(vector_trad, "Arg")
+      }
+      else if((stri=="AUU") | (stri=="AAC")) {
+        vector_trad <- append(vector_trad, "Asn")
+      }
+      else if((stri=="AAA") | (stri=="AAG")) {
+        vector_trad <- append(vector_trad, "Lys")
+      }
+      else if((stri=="AGU") | (stri=="AGC")) {
+        vector_trad <- append(vector_trad, "Ser")
+      }
+      else if((stri=="UGU") | (stri=="UGC")) {
+        vector_trad <- append(vector_trad, "Cys")
+      }
+      else if((stri=="GAU") | (stri=="GAC")) {
+        vector_trad <- append(vector_trad, "Asp")
+      }
+      else if((stri=="GAA") | (stri=="GAG")) {
+        vector_trad <- append(vector_trad, "Glu")
+      }
+      else if((stri=="GGU") | (stri=="GGC") | (stri=="GGA") | (stri=="GGG")) {
+        vector_trad <- append(vector_trad, "Gly")
+      }
+      else if((stri=="UAA") | (stri=="UAG") | (stri=="UGA")) {
+        vector_trad <- append(vector_trad, "STOP")
+        print(vector_trad)
+        vector_trad <- c()
+        break
+      }
+      else if(stri == "UUU" | stri == "UUC"){
+          vector_trad <- append(vector_trad, "Phe")
+        }
+        else if (stri == "UUA" | stri == "UUG" | stri == "CUU" | stri == "CUC" 
+                 | stri == "CUA" | stri == "CUG"){
+          vector_trad <- append(vector_trad, "Leu")
+        }
+        else if (stri == "AUU" | stri == "AUC" | stri == "AUA"){
+          vector_trad <- append(vector_trad, "Ile")
+        }
+        else if (stri == "GUU" | stri == "GUG" | stri == "GUC" | stri == "GUA"){
+          vector_trad <- append(vector_trad, "Leu")
+        }
+        else if (stri == "UCU" | stri == "UCA" | stri == "UCC" | stri == "UCG"){
+          vector_trad <- append(vector_trad, "Ser")
+        }
+        else if (stri == "CCU" | stri == "CCC" | stri == "CCA" | stri == "CCG"){
+          vector_trad <- append(vector_trad, "Pro")
+        }
+        else if (stri == "ACU" | stri == "ACA" | stri == "ACC" | stri == "ACG"){
+          vector_trad <- append(vector_trad, "Thr")
+        }
+        else if (stri == "GCU" | stri == "GCA" | stri == "GCC" | stri == "GCG"){
+          vector_trad <- append(vector_trad, "Ala")
+        }
+        else if (stri == "AUG") {
+          vector_trad <- append(vector_trad, "Met")
+        }
+      }
+    }
+  }
+  return(vector_trad)
+}
+trad <- traduc(secuencia)
+```
+
+6. inversa
+```{r}
+inversa <- function(secuencia) {
+  return(rev(secuencia))
+}
+inversa(secuencia)
+```
+7. 3'-> 5'
+```{r}
+hebra_compl <- function(secuencia) {
+  compl <- c()
+  for(i in 1:length(secuencia)) {
+    if(secuencia[i]=="5'") {
+      compl <- append(compl, "3'")
+    }
+    else if (secuencia[i]=="-") {
+      compl <- append(compl, "-")
+    }
+    else if (secuencia[i]=="A") {
+      compl <- append(compl, "T")
+    }
+    else if (secuencia[i]=="T") {
+      compl <- append(compl, "A")
+    }
+    else if (secuencia[i]=="G") {
+      compl <- append(compl, "C")
+    }
+    else if (secuencia[i]=="C") {
+      compl <- append(compl, "G")
+    }
+    else if (secuencia[i]=="3'") {
+      compl <- append(Compl, "5'")
+    }
+  }
+  return(compl)
+}
+hebra_compl(secuencia)
+```
+
+8. complementaria inversa
+```{r}
+hebra_compl <- function(secuencia) {
+  return(rev(secuencia))
+}
+hebra_compl(secuencia)
+```
+
+9. guiones y N desconocidos
+```{r}
+limpiar <- function(secuencia) {
+  secuencia_limpia <- c()
+  for(i in 1:length(secuencia)) {
+    if (secuencia[i]=="A" | secuencia[i]=="T" | secuencia[i]=="G" | secuencia[i]=="C") {
+      secuencia_limpia <- append(secuencia_limpia, secuencia[i])
+    }
+    else {
+      next
+    }
+  }
+  return(secuencia_limpia)
+}
+```
+

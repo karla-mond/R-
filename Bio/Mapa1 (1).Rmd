@@ -1,0 +1,30 @@
+---
+title: "Mapa_prueba2"
+output: html_document
+---
+
+Especificar uso de librerías 
+```{r}
+library("ggmap")
+```
+
+Leer datos 
+```{r}
+datos_covid <- read.csv(url("https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"))
+```
+
+Cambiar NA por 0s
+```{r}
+datos_covid[is.na(datos_covid)] = 0
+```
+
+Mapa del mundo
+```{r}
+world_map = map_data("world")
+str(world_map)
+```
+
+```{r}
+world_map = merge(world_map, datos_covid, by.x = "region", by.y = "Country.Region")
+```
+

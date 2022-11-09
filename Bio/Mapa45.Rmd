@@ -1,0 +1,68 @@
+---
+title: "Mapa Mundial"
+output: html_document
+---
+
+https://www.datanovia.com/en/blog/how-to-create-a-map-using-ggplot2/
+
+
+<p>Equipo:</p>
+<p> Ana Paula Katsuda, A01025303 </p>
+<p> Karla Mondragón, A01025108 </p>
+<p> Santiago Cano, A01029164 </p>
+
+<h4> Parte 1: Mapa de Muertes covid-19 </h4>
+Inicializar librerías
+```{r}
+#Llamar librerías para el mapa(previamente instaladas)
+library(arsenal)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+require(maps)
+require(viridis)
+theme_set(
+  theme_void()
+  )
+```
+
+Data frame para muertes por Covid-19
+```{r}
+#Leer el data frame proporcionado por la universidad de John Jopkins
+death_covid <- read.csv(url("https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"))
+
+head(death_covid)
+```
+
+Filtrar data frame para muertes y juntarlo con data frame que contiene información del mundo (país, latitud, longitud).
+```{r}
+#Filtrar el data frame 
+#Se filtran los datos de la fecha actual, se eligen las columnas de interés y se cambia el nombre de la columns Country.Region
+death_covid <- death_covid %>%
+  #Filtrar y seleccionar datos relevantes
+  filter(Date >= today() - days(1)) %>%
+  select(Country.Region, Deaths, Date) %>%
+  rename(region = Country.Region) 
+
+#Puesto a que algunos nombres de países son distintos para los dataframes, se cambiaron los nombres de ciertos países en el data frame de muertes por covid como se muestra: 
+death_covid[251, "region"] <- "USA"
+death_covid[96, "region"] <- "Democratic Republic of the Congo"
+death_covid[95, "region"] <- "Republic of Congo"
+death_covid[98, "region"] <- "Ivory Coast"
+death_covid[c(254:266), "region"] <- "UK"
+
+#Data frame con los datos de los países del mundo (latitud, long, etc)
+world_map <- map_data("world")
+#unir dataframes de muertes de covid con datos de los países del mundo
+covid_map <- left_join(death_covid, world_map, by = "region")
+```
+
+Graficar el mapa
+```{r}
+#Graficar el mapa
+ggplot(covid_map, aes(map_id = region, fill = Deaths))+
+  geom_map(map = covid_map)+
+  expand_limits(x = covid_map$long, y = covid_map$lat)+
+  scale_fill_viridis_c(option = "C") + labs(title = "Muertes por Covid-19", x = "long", y = "lat") + theme_gray()
+```
+El mapa muestra que el país con mayor cantidad de decesos por Covid-19 es estados unidos. También, se nota que Brasil, India y México han tenido una gran cantidad de muertes debidas al virus. 

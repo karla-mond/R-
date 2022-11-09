@@ -1,0 +1,187 @@
+---
+title: "S6"
+output:
+  pdf_document: default
+  html_document: default
+---
+Karla Mondragón, A01025108
+
+#instalación de libería
+```{r}
+#install.packages("seqinr")
+#library("seqinr")
+```
+
+Variables con secuencias
+```{r}
+zika<- read.fasta("ZIKA.fasta")
+
+```
+
+Tamaño de la secuencia
+```{r}
+length(zika[[1]])
+```
+
+R lee pares de bases, por favor
+```{r}
+count(zika[[1]],2)
+```
+
+Lee los nucleótidos, por favor.
+```{r}
+count(zika[[1]],1)
+```
+
+Encontrando secuencia complementaria de DNA
+```{r}
+zika
+comp(zika[[1]])
+```
+
+MERS-COV
+
+Variables con secuencias
+```{r}
+mers<- read.fasta("Mers-Cov.fasta")
+```
+
+Tamaño de la secuencia
+```{r}
+length(mers[[1]])
+```
+
+R lee las pares de bases por favor
+```{r}
+count(mers[[1]],2)
+```
+
+R lee los neuclótidos, por favor
+```{r}
+count(mers[[1]],1)
+```
+
+Encontrando la secuencia complementaria de ADN
+```{r}
+mers
+comp(mers[[1]])
+```
+
+DENGUE
+
+Variables con secuencias
+```{r}
+dengue <- read.fasta("Dengue.fasta")
+```
+
+Tamaño de la secuencia
+```{r}
+length(dengue[[1]])
+```
+
+Leer pares de bases
+```{r}
+count(dengue[[1]], 2)
+```
+
+Leer nucleotidos 
+```{r}
+count(dengue[[1]], 1)
+```
+
+Secuencia complementaria
+```{r}
+comp(dengue[[1]]) 
+```
+
+Wu-Han 1
+
+Variables con Secuencia
+
+```{r}
+wuhan <- read.fasta("Wu-Han-1.fasta")
+```
+
+tamaño
+```{r}
+length(wuhan[[1]])
+```
+
+nucleótidos
+```{r}
+count(wuhan[[1]], 1)
+```
+
+pares de bases
+```{r}
+count(wuhan[[1]], 2)
+```
+
+secuencia complementaria
+```{r}
+wuhan
+comp(wuhan[[1]])
+```
+
+SarsCovid
+
+Leer
+```{r}
+sarscovid <- read.fasta("SarsCovid.fasta")
+```
+
+tamaño
+```{r}
+length(sarscovid[[1]])
+```
+
+nucleótidos
+```{r}
+count(sarscovid[[1]], 1)
+```
+
+pares de bases
+```{r}
+count(sarscovid[[1]], 2)
+```
+
+secuencia complementaria
+```{r}
+sarscovid
+comp(sarscovid[[1]])
+```
+
+#H1N1
+
+Variables con secuencias
+```{r}
+h1n1 <- read.fasta("H1N1.fasta")
+```
+
+Tamaño de la secuencia
+```{r}
+length(h1n1[[1]])
+```
+
+Leer pares de bases
+```{r}
+count(h1n1[[1]], 2)
+```
+
+Leer nucleotidos 
+```{r}
+count(h1n1[[1]], 1)
+```
+
+Secuencia complementaria
+```{r}
+h1n1
+comp(h1n1[[1]])
+```
+
+
+
+
+
+
+

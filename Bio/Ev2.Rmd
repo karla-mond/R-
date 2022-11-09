@@ -1,0 +1,185 @@
+---
+title: "Evidencia2"
+output: html_document
+---
+<p>Equipo:</p>
+<p> Ana Paula Katsuda, A01025303 </p>
+<p> Karla Mondragón, A01025108 </p>
+<p> Santiago Cano, A01029164 </p>
+
+<p> Pregunta: Estudia la cercanía de SARS-CoV-2 con otros coronavirus humanos que ocasionan enfermedades similares (como MERS). En tu investigación debes trabajar con 5 virus diferentes. 
+Los virus de la familia del coronavirus que se eligieron fueron: 
+SARS coronavirus Tor2 (NC_004718)
+SARS-Cov-2 Wuhan-Hu-1 (NC_045512)
+MERS (NC_019843)
+Human coronavirus 229E (NC_002645)
+Human Coronavirus OC43 (NC_006213) </p>
+
+Inicializar librerías
+```{r}
+library(tidyr)
+library(dplyr)
+library(seqinr)
+library(ggplot2)
+```
+1. Leer secuencias
+```{r}
+sarsCov2 <- read.fasta("SarsCov2.fasta")
+sarsCov <-  read.fasta("SarsCovid1.fasta")
+mers <- read.fasta("Mers-Cov.fasta")
+c229E <- read.fasta("229E.fasta")
+oc43 <- read.fasta("oc43.fasta")
+```
+
+2. Longitudes de secuencias 
+```{r}
+sarsCov2_len <- length(sarsCov2[[1]])
+sarsCov_len <- length(sarsCov[[1]])  
+mers_len <- length(mers[[1]])
+c229E_len <- length(c229E[[1]])
+oc43_len <- length(oc43[[1]])
+
+sarsCov2_len 
+sarsCov_len 
+mers_len 
+c229E_len 
+oc43_len 
+```
+3. comparación de las bases de las secuencias de las variantes del virus
+```{r}
+#número de nucleótidos por secuencia
+sarsCov2_b <- count(sarsCov2[[1]], 1)
+sarsCov_b <- count(sarsCov[[1]], 1)
+mers_b <- count(mers[[1]], 1)
+c229_b <- count(c229E[[1]], 1)
+oc43_b <- count(oc43[[1]], 1)
+
+nVariantes = 5
+
+variante <- c(rep("SarsCov-2", 4), rep("SarsCov", 4), rep("MERS", 4), rep("C229", 4), rep("OC43", 4))
+nucleotido <- rep(c("a", "t", "g", "c"), nVariantes)
+bases_virus <- c(sarsCov2_b, sarsCov_b, mers_b, c229_b, oc43_b)
+
+#Crear Data Frame
+comparacion_bases <- data.frame(variante, nucleotido, bases_virus)
+comparacion_bases 
+
+#Crear Gráfica
+plot <- ggplot(comparacion_bases, aes(x=variante, y=bases_virus, fill=nucleotido)) + geom_bar(stat='identity', position="dodge")
+
+#Características de la Gáfica
+graf <- plot + coord_cartesian(ylim = c(0, 11000)) + theme_gray() + labs(title="Bases de ADN", x="Variantes Familia Coronavirus", y="Frecuencia nucleótidos") + theme_gray()
+graf
+```
+
+El gráfico de barras, muestra la cantidad de cada nucleótido en las secuencias de los virus elegidos. Es posible notar un patrón en las bases de ADN de todos los virus: en todos los casos, existe una mayor cantidad de citosina (c), seguida de adenina (a), guanina (g) y timina (t). En este caso, se observa que la frecuencia de los nucleótidos está descrita por el eje "y" mientras que los virus de la familia coronavirus están descritos en el eje "x". 
+
+Si bien todas las variantes tienen distintas cantidades de cada nucleótido, sí muestran características comunes en cuanto a su composición de ADN. El virus que más citosina (c) contiene, es el OC43; mientras tanto, el virus con menos timina (t), es el 229E.
+
+4. Análisis jerárquico global
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("ggtree")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("DECIPHER")
+```
+
+```{r}
+library(Biostrings)
+library(seqinr)
+library(adegenet)
+library(ape)
+library(ggtree)
+library(DECIPHER)
+library(viridis)
+library(ggplot2)
+```
+
+```{r}
+#vector con viruses 
+virus <- c("NC_002645", "NC_006213", "NC_045512", "NC_019843", "NC_004718")
+```
+
+```{r}
+secuencias <- read.GenBank(virus)
+```
+
+```{r}
+write.dna(secuencias,  file ="coronaviruses.fasta", format = "fasta", append =
+FALSE, nbcol = 6, colsep = " ", colw = 10)
+```
+
+```{r}
+virus_sin_alinear <- readDNAStringSet("coronaviruses.fasta", format = "fasta")
+virus_sin_alinear
+```
+
+```{r}
+virus_sin_alinear <- OrientNucleotides(virus_sin_alinear)
+
+virus_alineado <- AlignSeqs(virus_sin_alinear)
+```
+
+```{r}
+writeXStringSet(virus_alineado, file="virus_alineado.fasta")
+```
+
+```{r}
+virus <- read.alignment("virus_alineado.fasta", format = "fasta")
+```
+
+```{r}
+matriz_distancia <- dist.alignment(virus, matrix = "similarity")
+```
+
+```{r}
+df_distancia <- as.data.frame(as.matrix(matriz_distancia))
+table.paint(df_distancia, cleg=0, clabel.row=.5, clabel.col=.5) + scale_color_viridis()
+```
+
+  La matriz muestra el grado de similitud entre los distintos virus de la familia del coronavirus. Dependiendo del tono que se representa, la similitud. Es posible notar, que los virus más similares son SARS (NC_004718) y SARS-Cov-2 (NC_045512). Después, se observa que MERS (NC_019843) y SARS-Cov-2 (NC_045512) tienen un nivel de similitud un poco menor. Igualmente, SARS (NC_004718) y MERS (NC_019843) tienen un grado menor de aspectos comunes. Finalmente, se nota que las demás combinaciones de virus, cuentan con  más diferencias entre ellas.
+
+```{r}
+arbol <- nj(matriz_distancia)
+class(arbol) 
+
+arbol <- ladderize(arbol)
+```
+
+```{r}
+plot(arbol, cex = 0.6)
+title("Coronavirus Humano")
+```
+
+  En el árbol filogenético hay 3 puntos de ramificación. El SARS-CoV y la variante de Wuhan comparten el ancestro común mas reciente, lo que los hace más similares entre sí que entre las otras variantes; asimismo, estas dos variantes comparten un ancestro común reciente con MERS-CoV. Las variantes 229E y OC43 no se relacionan con las otras variantes de las misma manera, es posible suponer que hay un ancestro común entre todas las variantes -el más lejano al SARS-CoV y a la variante de Wuhan-. Puesto a que no hay una raíz ni ramificación entre todas las variantes, es desconocido.
+  
+  A partir de los análisis anteriores, es posible identificar que los virus de la familia coronavirus siguen una tendencia en cuanto a su número de nucleótidos. Además, se logró identificar que SARS, SARS-Cov-2 y MERS son los miembros de la familia con más similitudes
+
+<p></p>
+<h4> Referencias </h4>
+<p>F, W. (2020, January 17). Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1, complete genome. Retrieved from https://www.ncbi.nlm.nih.gov/nuccore/1798174254 </p>
+<p>Zaki, A. M., & van Boheemen, S. (2012). Middle East respiratory syndrome-related coronavirus isolate HCoV-EMC/ - Nucleotide - NCBI. National Center for Biotechnology Information. https://www.ncbi.nlm.nih.gov/nuccore/NC_019843 </p>
+<p>He, R. (2020, May 27) SARS coronavirus Tor2, complete genome. - Nucleotide - NCBI. National Center for Biotechnology Information. https://www.ncbi.nlm.nih.gov/nuccore/30271926</p>
+<p> St-Jean, J. R. (2004). Human coronavirus OC43 strain ATCC VR-759, complete genome. https://www.ncbi.nlm.nih.gov/nuccore/NC_006213 </p>
+<p> Thiel,V., Herold,J., Schelle,B. and Siddell,S.G. (Agosto 2018). Infectious RNA transcribed in vitro from a cDNA copy of the human coronavirus genome cloned in vaccinia virus. -Nucleótido- NCBI. National Center for Biotechnology Information. Recuperado de https://www.ncbi.nlm.nih.gov/nuccore/12175745 </p>
+<p> Weiss, S., Navas-Martin, S. (Diciembre, 2005). Coronavirus Pathogenesis and the Emerging Pathogen Severe Acute Respiratory Syndrome Coronavirus. [Sitio Web]. Recuperado de 
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1306801/ </p>
+```{r}
+citation("dplyr")
+citation("tidyr")
+citation("seqinr")
+citation("ggplot2")
+citation("Biostrings")
+citation("seqinr")
+citation("ape")
+citation("ggtree")
+citation("DECIPHER")
+citation("viridis")
+citation("ggmsa")
+```

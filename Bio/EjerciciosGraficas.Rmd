@@ -1,0 +1,92 @@
+---
+title: "EjerciciosGraficas"
+output: html_document
+---
+```{r}
+#install.packages("Require")
+#install.packages("maps")
+#install.packages("viridis")
+library(ggplot2)
+library(dplyr)
+library(Require)
+library(pixmap)
+require(maps)
+require(viridisLite)
+```
+1. grafica comportamientos covid
+```{r}
+covid_19_data <- read.csv(url("https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"))
+
+head(covid_19_data)
+```
+```{r}
+mexico <- subset(covid_19_data, Country.Region=="Mexico")
+(mexico)
+```
+```{r}
+mexico$Date <- as.Date(mexico$Date, "%Y-%m-%d")
+```
+```{r}
+grafica_mexico_confirmados <- ggplot(mexico,
+aes(Date, Confirmed, label=Confirmed)) + 
+geom_point()+geom_line() + geom_text(hjust="right")
+
+grafica_mexico_confirmados
+```
+```{r}
+grafica_mexico_decesos <- ggplot(mexico, aes(Date, Deaths, label=Deaths)) + geom_point() + geom_line() + geom_text(hjust="right")
+
+grafica_mexico_decesos
+```
+
+2. grafica comparar EUA, Mexico y Canada
+```{r}
+us <- subset(covid_19_data, Country.Region=="US")
+us$Date <- as.Date(us$Date, "%Y-%m-%d")
+(us)
+```
+```{r}
+#canada <- subset(covid_19_data, Country.Region=="Canada")
+#canada$Date <- as.Date(canada$Date, "%Y-%m-%d")
+#(canada)
+```
+```{r}
+canda <- canada %>% group_by(Date) %>% summarise(Confirmed = sum(Confirmed, na.rm = TRUE))
+(canada)
+```
+```{r}
+grafica_us_confirmados <- ggplot(us,
+aes(Date, Confirmed, label=Confirmed)) + 
+geom_point()+geom_line() + geom_text(hjust="right")
+```
+```{r}
+grafica_canada_confirmados <- ggplot(canada,
+aes(Date, Confirmed, label=Confirmed)) + 
+geom_point()+geom_line() + geom_text(hjust="right")
+```
+```{r}
+plot_MexUsCanada<- ggplot()+ geom_line(data = mexico, aes(x=Date, y=log10(Confirmed)), color="#006847", linetype="twodash") + geom_line(data = canada, aes(x=Date, y=log10(Confirmed)), color="#ED2121",linetype="dotted")+ geom_line(data = us, aes(x=Date, y=log10(Confirmed)), color="#373BBD")
+plot_MexUsCanada
+```
+
+```{r}
+mexico_us_canada <- data.frame(mexico$Date, mexico$Confirmed, us$Confirmed, canada$Confirmed)
+
+mexico_us_canada_plot <- ggplot(mexico_us_canada, aes(mexico_us_canada)) + 
+  geom_point(aes(y=mexico.Confirmed, col="México")) + geom_point(aes(y=us.Confirmed, col="EUA")) + geom_point(aes(y=canada.Confirmed, col="Canada"))
+
+plot(mexico_us_canada)
+``` 
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager:: install()
+BiocManager::install(c("GenomicFeatures", "AnnotationDbi"))
+BiocManager::install(c("Biostrings"))
+```
+
+```{r}
+virus <- readDNAStringSet("virus.fasta",format="fasta")
+ggmsa(virus, 0, 100, color="Chemistry_AA")
+```
+

@@ -1,0 +1,93 @@
+---
+title: "CLASE"
+output: html_document
+---
+```{r}
+#install.packages("adegenet")
+#install.packages("BiocManager")
+#install.packages("stringr")
+#install.packages("ggplot2")
+#BioManager::install("ggtree")
+library(dplyr)
+library(stringr)
+library(seqinr)
+library(adegenet)
+library(ape)
+library(Biostrings)
+#library(ggtree)
+#library(DECIPHER)
+library(viridis)
+library(ggmsa)
+library(ggplot2)
+```
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager:: install()
+BiocManager::install(c("GenomicFeatures", "AnnotationDbi"))
+BiocManager::install(c("Biostrings"))
+```
+```{r}
+virus <- readDNAStringSet("virus.fasta",format="fasta")
+ggmsa(virus, 0, 100, color="Chemistry_AA")
+virus <- readDNAStringSet("ZIKA.fasta",format="fasta")
+ggmsa(virus, 0, 100, color="Chemistry_AA")
+virus <- readDNAStringSet("SarsCovid.fasta",format="fasta")
+ggmsa(virus, 0, 100, color="Chemistry_AA")
+virus <- readDNAStringSet("Wu-Han-1.fasta",format="fasta")
+ggmsa(virus, 0, 100, color="Chemistry_AA")
+virus <- readDNAStringSet("Mers-Cov.fasta",format="fasta")
+ggmsa(virus, 0, 100, color="Chemistry_AA")
+virus <- readDNAStringSet("Dengue.fasta",format="fasta")
+ggmsa(virus, 0, 100, color="Chemistry_AA")
+```
+```{r}
+zika <- read.fasta("ZIKA.fasta", as.string=TRUE)
+sars_covid <- read.fasta("SarsCovid.fasta", as.string=TRUE)
+wuhan <- read.fasta("Wu-Han-1.fasta", as.string=TRUE)
+mers <- read.fasta("Mers-Cov.fasta", as.string=TRUE)
+dengue <- read.fasta("Dengue.fasta", as.string=TRUE)
+```
+
+```{r}
+split_zika <- str_split(zika, "")
+split_sars <- str_split(sars_covid, "")
+split_wuhan <- str_split(wuhan, "")
+split_mers <- str_split(mers, "")
+split_dengue <- str_split(dengue, "")
+```
+
+```{r}
+split_z <- split_zika[[1]]
+split_s <- split_sars[[1]]
+split_w <- split_wuhan[[1]]
+split_m <- split_mers[[1]]
+split_d <- split_dengue[[1]]
+```
+
+```{r}
+split_z[1:100]
+split_s[1:100]
+split_w[1:100]
+split_m[1:100]
+split_d[1:100]
+```
+```{r}
+pos <- c(1:100)
+nucleotidos <- c("a", "c", "g", "t")
+
+df <- data.frame(pos, nucleotidos, split_z[1:100], split_s[1:100], split_w[1:100], split_m[1:100], split_d[1:100])
+df
+
+```
+```{r}
+ggplot(data=df) +
+  geom_point(mapping = aes(x= pos, y=split_z.1.100., color="zika")) +
+  geom_point(mapping = aes(x= pos, y=split_s.1.100., color="sars")) +
+  geom_point(mapping = aes(x= pos, y=split_w.1.100., color="wuhan")) +
+  geom_point(mapping = aes(x= pos, y=split_m.1.100., color="mers")) +
+  geom_point(mapping = aes(x= pos, y=split_d.1.100., color="dengue")) 
+
+plot + labs(title="Secuencias de Virus", x="Posición", y="Nucleótido", color="Virus") + theme_gray()
+```
+
